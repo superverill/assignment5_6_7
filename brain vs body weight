@@ -1,0 +1,53 @@
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+df = pd.read_fwf("brain_body.txt")
+df1=df.copy()
+
+df.describe()
+
+df.plot(x='Brain',y= 'Body',style='o')
+plt.title('Brain Weight vs Body Weight', size=20)
+plt.xlabel('Brain Weight')
+plt.ylabel('Body Weight')
+
+df.Brain= np.log(df.Brain)
+df.Body= np.log(df.Body)
+
+df.plot(x='Brain',y= 'Body',style='o')
+plt.title('Brain Weight vs Body Weight', size=20)
+plt.xlabel('Brain Weight')
+plt.ylabel('Body Weight')
+
+df.corr()
+
+X = df.loc[:, ['Brain']].values 
+y = df.loc[:, 'Body'].values 
+from sklearn.model_selection import train_test_split #import the required function
+x_train, x_test, y_train, y_test = train_test_split(X, y, test_size=0.25)
+
+from sklearn.preprocessing import StandardScaler
+scaler = StandardScaler()
+scaler.fit(x_train)
+x_train = scaler.transform(x_train)
+x_test = scaler.transform(x_test)
+
+#Model
+from sklearn.linear_model import LinearRegression
+reg= LinearRegression()
+reg.fit(x_train,y_train)
+print('Coefficient',reg.coef_[0],'Intercept',reg.intercept_)
+
+y_pred = reg.predict(x_test)
+comparison= pd.DataFrame({'Actual':y_test,'Predicted':y_pred})
+comparison
+
+from sklearn import metrics
+print('R2 Score:',reg.score(x_test,y_test))
+
+df1.plot(x='Brain',y= 'Body',style='o')
+plt.title('Brain Weight vs Body Weight', size=20)
+plt.xlabel('Brain Weight')
+plt.ylabel('Body Weight')
+plt.text(1000,2000,"Y= {}*X + {}".format(round(reg.coef_[0],2),round(reg.intercept_,2)),fontsize=15)
+
