@@ -57,3 +57,10 @@ chirps=int(input())
 t= (chirps-reg.intercept_)/reg.coef_[0]
 t= (t*scaler.scale_)+scaler.mean_
 print("The ground temp at ",chirps," Chirps/second is ",round(t[0],2)," Farenheit" )
+
+#charting the original equation on the chart
+df.plot(x='Ground Temperature',y= 'Chirps/Second',style='o')
+plt.title('Temperature vs Chirps', size=20)
+plt.xlabel('Ground Temperature')
+plt.ylabel('Chirps/Second')
+plt.text(85,16,"Y= {}*X + {}".format(round(reg.coef_[0],2),round(reg.intercept_),2),fontsize=15)
